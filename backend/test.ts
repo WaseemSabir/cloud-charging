@@ -25,16 +25,16 @@ async function consistencyTest() {
     }
     const results = await Promise.all(request_promises);
     for(let result of results) {
-        console.log(result.body);
         remainingBalance -= result.body.charges;
     }
 
     // all the charges made should be consistent with the remaining balance
     await app.post("/charge").expect(200).then(res => {
-        console.log(res.body);
         remainingBalance -= res.body.charges;
         if(remainingBalance !== res.body.remainingBalance) {
             throw new Error("Inconsistent balance.");
+        } else {
+            console.log("Balance is consistent.");
         }
     });
 }
